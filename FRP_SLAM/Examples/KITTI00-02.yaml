@@ -1,0 +1,72 @@
+%YAML:1.0
+
+#--------------------------------------------------------------------------------------------
+# GPU Parameters
+#--------------------------------------------------------------------------------------------
+
+gpu.use_gpu: 1
+gpu.is_jetson: 0
+
+#--------------------------------------------------------------------------------------------
+# Camera Parameters. Adjust them!
+#--------------------------------------------------------------------------------------------
+
+# Camera calibration and distortion parameters (OpenCV) 
+Camera.fx: 718.856
+Camera.fy: 718.856
+Camera.cx: 607.1928
+Camera.cy: 185.2157
+
+Camera.k1: 0.0
+Camera.k2: 0.0
+Camera.p1: 0.0
+Camera.p2: 0.0
+
+Camera.width: 1241
+Camera.height: 376
+
+# Camera frames per second 
+Camera.fps: 10.0
+
+# stereo baseline times fx
+Camera.bf: 386.1448
+
+# Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+Camera.RGB: 1
+
+# Close/Far threshold. Baseline times.
+ThDepth: 35
+
+#--------------------------------------------------------------------------------------------
+# ORB Extractor GPU 配置参数
+ORBextractorGpu.tile_h: 20  # GPU 提取块的高度
+ORBextractorGpu.tile_w: 20  # GPU 提取块的宽度
+ORBextractorGpu.fixed_multi_scale_tile_size: 0  # 0 表示自适应块大小，1 表示固定块大小
+ORBextractorGpu.apply_nms_ms: 1  # 对多尺度关键点应用非最大抑制（NMS）
+ORBextractorGpu.nms_ms_mode_gpu: 1  # 使用 GPU 加速多尺度关键点的 NMS
+
+# ORB Extractor GPU 尺度参数
+ORBextractorGpu.scaleFactor: 1.2  # 图像金字塔各级之间的尺度因子
+ORBextractorGpu.nLevels: 6  # 图像金字塔的级数
+
+# ORB Extractor FAST 阈值参数
+ORBextractorGpu.th_FAST_MIN: 7  # FAST 最小阈值
+ORBextractorGpu.th_FAST_MAX: 30  # FAST 最大阈值
+ORBextractorGpu.FAST_N_MIN: 9  # FAST 最小邻域像素数
+ORBextractorGpu.FAST_N_MAX: 14  # FAST 最大邻域像素数
+
+
+#--------------------------------------------------------------------------------------------
+# Viewer Parameters
+#--------------------------------------------------------------------------------------------
+Viewer.KeyFrameSize: 0.6
+Viewer.KeyFrameLineWidth: 2
+Viewer.GraphLineWidth: 1
+Viewer.PointSize:2
+Viewer.CameraSize: 0.7
+Viewer.CameraLineWidth: 3
+Viewer.ViewpointX: 0
+Viewer.ViewpointY: -100
+Viewer.ViewpointZ: -0.1
+Viewer.ViewpointF: 1500
+
