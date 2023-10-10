@@ -1,0 +1,215 @@
+<launch>
+  <arg name="map_size_x_"/>
+  <arg name="map_size_y_"/>
+  <arg name="map_size_z_"/>
+
+  <arg name="odometry_topic"/>
+  <arg name="camera_pose_topic"/>
+  <arg name="depth_topic"/>
+  <arg name="cloud_topic"/>
+
+  <arg name="cx"/>
+  <arg name="cy"/>
+  <arg name="fx"/>
+  <arg name="fy"/>
+
+  <arg name="max_vel"/>
+  <arg name="max_acc"/>
+  <arg name="planning_horizon"/>
+
+  <arg name="point_num"/>
+  <arg name="point0_x"/>
+  <arg name="point0_y"/>
+  <arg name="point0_z"/>
+  <arg name="point1_x"/>
+  <arg name="point1_y"/>
+  <arg name="point1_z"/>
+  <arg name="point2_x"/>
+  <arg name="point2_y"/>
+  <arg name="point2_z"/>
+  <arg name="point3_x"/>
+  <arg name="point3_y"/>
+  <arg name="point3_z"/>
+  <arg name="point4_x"/>
+  <arg name="point4_y"/>
+  <arg name="point4_z"/>
+
+  <arg name="flight_type"/>
+
+  <!-- main node -->
+  <node pkg="ego_planner" name="ego_planner_node" type="ego_planner_node" output="screen">
+    <remap from="/odom_world" to="$(arg odometry_topic)"/>
+    <remap from="/grid_map/odom" to="$(arg odometry_topic)"/>
+    <remap from="/grid_map/cloud" to="$(arg cloud_topic)"/>
+    <remap from = "/grid_map/pose"   to = "$(arg camera_pose_topic)"/> 
+    <remap from = "/grid_map/depth" to = "$(arg depth_topic)"/>
+
+    <!-- planning fsm -->
+    <param name="fsm/flight_type" value="$(arg flight_type)" type="int"/>
+    <param name="fsm/thresh_replan" value="1.5" type="double"/>
+    <param name="fsm/thresh_no_replan" value="2.0" type="double"/>
+    <param name="fsm/planning_horizon" value="$(arg planning_horizon)" type="double"/> <!--always set to 1.5 times grater than sensing horizen-->
+    <param name="fsm/planning_horizen_time" value="3" type="double"/>
+    <param name="fsm/emergency_time_" value="1.0" type="double"/>
+
+    <param name="fsm/waypoint_num" value="$(arg point_num)" type="int"/>
+    <param name="fsm/waypoint0_x" value="$(arg point0_x)" type="double"/>
+    <param name="fsm/waypoint0_y" value="$(arg point0_y)" type="double"/>
+    <param name="fsm/waypoint0_z" value="$(arg point0_z)" type="double"/>
+    <param name="fsm/waypoint1_x" value="$(arg point1_x)" type="double"/>
+    <param name="fsm/waypoint1_y" value="$(arg point1_y)" type="double"/>
+    <param name="fsm/waypoint1_z" value="$(arg point1_z)" type="double"/>
+    <param name="fsm/waypoint2_x" value="$(arg point2_x)" type="double"/>
+    <param name="fsm/waypoint2_y" value="$(arg point2_y)" type="double"/>
+    <param name="fsm/waypoint2_z" value="$(arg point2_z)" type="double"/>
+    <param name="fsm/waypoint3_x" value="$(arg point3_x)" type="double"/>
+    <param name="fsm/waypoint3_y" value="$(arg point3_y)" type="double"/>
+    <param name="fsm/waypoint3_z" value="$(arg point3_z)" type="double"/>
+    <param name="fsm/waypoint4_x" value="$(arg point4_x)" type="double"/>
+    <param name="fsm/waypoint4_y" value="$(arg point4_y)" type="double"/>
+    <param name="fsm/waypoint4_z" value="$(arg point4_z)" type="double"/>
+
+    <param name="grid_map/resolution"      value="0.1" />
+    <param name="grid_map/map_size_x"   value="$(arg map_size_x_)" /> 
+    <param name="grid_map/map_size_y"   value="$(arg map_size_y_)" /> 
+    <param name="grid_map/map_size_z"   value="$(arg map_size_z_)" /> 
+    <param name="grid_map/local_update_range_x"  value="5.5" /> 
+    <param name="grid_map/local_update_range_y"  value="5.5" /> 
+    <param name="grid_map/local_update_range_z"  value="4.5" /> 
+<!--    <param name="grid_map/obstacles_inflation"     value="0.099" />-->
+    <param name="grid_map/obstacles_inflation"     value="0.2" />
+    <param name="grid_map/local_map_margin" value="300"/>
+    <param name="grid_map/ground_height"        value="-0.01"/>
+    <!-- camera parameter -->
+    <param name="grid_map/cx" value="$(arg cx)"/>
+    <param name="grid_map/cy" value="$(arg cy)"/>
+    <param name="grid_map/fx" value="$(arg fx)"/>
+    <param name="grid_map/fy" value="$(arg fy)"/>
+    <!-- depth filter -->
+    <param name="grid_map/use_depth_filter" value="true"/>
+    <param name="grid_map/depth_filter_tolerance" value="0.15"/>
+    <param name="grid_map/depth_filter_maxdist"   value="5.0"/>
+    <param name="grid_map/depth_filter_mindist"   value="0.2"/>
+    <param name="grid_map/depth_filter_margin"    value="1"/>
+    <param name="grid_map/k_depth_scaling_factor" value="1000.0"/>
+    <!--  grid_map/skip_pixel: 跳过像素的步长。-->
+    <param name="grid_map/skip_pixel" value="2"/>
+    <!-- local fusion -->
+    <!--  grid_map/p_hit, grid_map/p_miss, grid_map/p_min, grid_map/p_max, grid_map/p_occ: 用于地图更新的概率参数。-->
+    <param name="grid_map/p_hit"  value="0.65"/>
+    <param name="grid_map/p_miss" value="0.35"/>
+    <param name="grid_map/p_min"  value="0.12"/>
+    <param name="grid_map/p_max"  value="0.90"/>
+    <param name="grid_map/p_occ"  value="0.80"/>
+    <!--  grid_map/min_ray_length, grid_map/max_ray_length: 光线追踪的最小和最大长度。-->
+    <param name="grid_map/min_ray_length" value="0.1"/>
+    <param name="grid_map/max_ray_length" value="4.5"/>
+    <!--  grid_map/virtual_ceil_height: 虚拟天花板的高度。-->
+    <param name="grid_map/virtual_ceil_height"   value="2.5"/>
+    <!--  grid_map/visualization_truncate_height: 可视化时截断的高度。-->
+    <param name="grid_map/visualization_truncate_height"   value="3.0"/>
+    <!--  grid_map/show_occ_time: 是否显示占用时间。-->
+    <param name="grid_map/show_occ_time"  value="false"/>
+    <!--  grid_map/pose_type: 坐标类型。-->
+
+    <param name="grid_map/pose_type"     value="2"/>
+<!--    选择1会导致地图错误-->
+<!--    <param name="grid_map/pose_type"     value="1"/>-->
+    <!--  grid_map/frame_id: 坐标系的名称。-->
+    <param name="grid_map/frame_id"      value="world"/>
+
+  <!-- planner manager -->
+    <!--  manager/max_vel, manager/max_acc, manager/max_jerk: 规划器管理器的最大速度、最大加速度和最大加速度变化率。-->
+    <param name="manager/max_vel" value="$(arg max_vel)" type="double"/>
+    <param name="manager/max_acc" value="$(arg max_acc)" type="double"/>
+    <param name="manager/max_jerk" value="4" type="double"/>
+    <!--  manager/control_points_distance: 控制点之间的距离。-->
+    <param name="manager/control_points_distance" value="1.0" type="double"/>
+    <!--  manager/feasibility_tolerance: 可行性容差。-->
+    <param name="manager/feasibility_tolerance" value="0.05" type="double"/>
+    <!--  manager/planning_horizon: 规划的时间跨度。-->
+    <param name="manager/planning_horizon" value="$(arg planning_horizon)" type="double"/>
+
+    <!--  manager/use_distinctive_trajs: 是否使用不同的轨迹。-->
+  <!-- trajectory optimization -->
+    <!--  optimization/lambda_smooth, optimization/lambda_collision, optimization/lambda_feasibility, optimization/lambda_fitness: 用于轨迹优化的参数。-->
+
+    <param name="optimization/lambda_smooth" value="1.0" type="double"/>
+    <param name="optimization/lambda_collision" value="0.5" type="double"/>
+    <param name="optimization/lambda_feasibility" value="0.1" type="double"/>
+    <param name="optimization/lambda_fitness" value="1.0" type="double"/>
+    <!--  optimization/dist0, optimization/swarm_clearance: 距离和障碍物间隔。-->
+    <param name="optimization/dist0" value="0.5" type="double"/>
+    <!--  optimization/max_vel, optimization/max_acc: 用于轨迹优化的最大速度和最大加速度。-->
+    <param name="optimization/max_vel" value="$(arg max_vel)" type="double"/>
+    <param name="optimization/max_acc" value="$(arg max_acc)" type="double"/>
+    <!--  bspline/limit_vel, bspline/limit_acc, bspline/limit_ratio: B样条曲线的速度和加速度限制。-->
+    <param name="bspline/limit_vel" value="$(arg max_vel)" type="double"/>
+    <param name="bspline/limit_acc" value="$(arg max_acc)" type="double"/>
+    <param name="bspline/limit_ratio" value="1.1" type="double"/>
+
+  </node>
+<!--  grid_map/resolution: 网格地图的分辨率，指定每个网格单元的大小，单位是米。-->
+
+<!--  grid_map/map_size_x, grid_map/map_size_y, grid_map/map_size_z: 网格地图的尺寸，分别表示X、Y、Z轴的范围，以米为单位。-->
+
+<!--  grid_map/local_update_range_x, grid_map/local_update_range_y, grid_map/local_update_range_z: 本地更新范围，指定只更新在此范围内的地图网格。-->
+
+<!--  grid_map/obstacles_inflation: 障碍物膨胀参数，用于在地图上膨胀障碍物的大小，以米为单位。-->
+
+<!--  grid_map/local_map_margin: 本地地图边界的边距，以米为单位。-->
+
+<!--  grid_map/ground_height: 地面高度，通常为负数，表示地面的高度，以米为单位。-->
+
+<!--  grid_map/cx, grid_map/cy, grid_map/fx, grid_map/fy: 相机参数，用于校正深度图像和点云数据。-->
+
+<!--  grid_map/use_depth_filter: 是否使用深度过滤器来处理深度数据。-->
+
+<!--  grid_map/depth_filter_tolerance: 深度过滤器容差参数，用于过滤深度数据中的噪声。-->
+
+<!--  grid_map/depth_filter_maxdist, grid_map/depth_filter_mindist: 深度过滤器的最大和最小距离限制。-->
+
+<!--  grid_map/depth_filter_margin: 深度过滤器的边距。-->
+
+<!--  grid_map/k_depth_scaling_factor: 深度数据的缩放因子。-->
+
+<!--  grid_map/skip_pixel: 跳过像素的步长。-->
+
+<!--  grid_map/p_hit, grid_map/p_miss, grid_map/p_min, grid_map/p_max, grid_map/p_occ: 用于地图更新的概率参数。-->
+
+<!--  grid_map/min_ray_length, grid_map/max_ray_length: 光线追踪的最小和最大长度。-->
+
+<!--  grid_map/virtual_ceil_height: 虚拟天花板的高度。-->
+
+<!--  grid_map/visualization_truncate_height: 可视化时截断的高度。-->
+
+<!--  grid_map/show_occ_time: 是否显示占用时间。-->
+
+<!--  grid_map/pose_type: 坐标类型。-->
+
+<!--  grid_map/frame_id: 坐标系的名称。-->
+
+<!--  manager/max_vel, manager/max_acc, manager/max_jerk: 规划器管理器的最大速度、最大加速度和最大加速度变化率。-->
+
+<!--  manager/control_points_distance: 控制点之间的距离。-->
+
+<!--  manager/feasibility_tolerance: 可行性容差。-->
+
+
+
+<!--  manager/use_distinctive_trajs: 是否使用不同的轨迹。-->
+
+<!--  manager/drone_id: 无人机的ID。-->
+
+<!--  optimization/lambda_smooth, optimization/lambda_collision, optimization/lambda_feasibility, optimization/lambda_fitness: 用于轨迹优化的参数。-->
+
+<!--  optimization/dist0, optimization/swarm_clearance: 距离和障碍物间隔。-->
+
+<!--  optimization/max_vel, optimization/max_acc: 用于轨迹优化的最大速度和最大加速度。-->
+
+<!--  bspline/limit_vel, bspline/limit_acc, bspline/limit_ratio: B样条曲线的速度和加速度限制。-->
+
+<!--  prediction/obj_num: 预测的对象数量。-->
+
+<!--  prediction/lambda, prediction/predict_rate: 用于对象预测的参数。-->
+</launch>
