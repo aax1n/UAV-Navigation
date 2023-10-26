@@ -1,8 +1,0 @@
-<launch>
-     ORB_SLAM3 location Node
-        <node pkg="FRP_SLAM" type="Stereo" name="Stereo" output="screen"
-              args="$(find FRP_SLAM)/../../../Vocabulary/ORBvoc.bin
-              $(find FRP_SLAM)/../../../Examples/Stereo/Stereo_D435i.yaml
-               false">
-        </node>
-</launch>
